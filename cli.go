@@ -46,8 +46,13 @@ func (c *cli) Run(args []string) error {
 		}
 		targetPath := filepath.ToSlash(rel)
 
+		currentDirForDocker, err := modDir(currentDir)
+		if err != nil {
+			return err
+		}
+
 		//args := []string{`build`, `-o`, `app.uf2`, `-target`, `pyportal`, `.`}
-		err = runTinyGo(currentDir, targetPath, os.Args[1:])
+		err = runTinyGo(currentDirForDocker, targetPath, os.Args[1:])
 		if err != nil {
 			return err
 		}

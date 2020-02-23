@@ -7,8 +7,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 const (
@@ -20,10 +18,6 @@ type cli struct {
 	outStream io.Writer
 	errStream io.Writer
 }
-
-var (
-	app = kingpin.New(appName, appDescription)
-)
 
 func (c *cli) Run(args []string) error {
 	if len(os.Args) > 1 {

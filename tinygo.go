@@ -7,13 +7,13 @@ import (
 	"github.com/mattn/go-tty"
 )
 
-func runTinyGo(currentDir, targetPath string, args []string) error {
+func runTinyGo(dockerImage, currentDir, targetPath string, args []string) error {
 	cmd := exec.Command(
 		`docker`, `run`, `-it`, `--rm`,
 		`-v`, fmt.Sprintf(`%s:/go/src/%s`, currentDir, targetPath),
 		`-w`, fmt.Sprintf(`/go/src/%s`, targetPath),
 		`-e`, `GOPATH=/go`,
-		`tinygo/tinygo`,
+		dockerImage,
 		`tinygo`)
 	cmd.Args = append(cmd.Args, args...)
 	//fmt.Println(cmd)

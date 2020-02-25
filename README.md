@@ -34,6 +34,12 @@ $ cd path/to/your/project
 $ tinygo-docker build -o app.uf2 -target pyportal .
 ```
 
+You can specify docker image / tag.  
+
+```
+$ tinygo-docker --docker-image tinygo/tinygo-dev build -o app.uf2 -target pyportal .
+```
+
 ## Installation
 
 ```

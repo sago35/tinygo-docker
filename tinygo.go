@@ -7,16 +7,27 @@ import (
 	"github.com/mattn/go-tty"
 )
 
-func runTinyGo(dockerImage, currentDir, targetPath string, args []string) error {
+func runTinyGo(dockerImage, currentDir, targetPath string, args []string, verbose, cmdMode bool) error {
 	cmd := exec.Command(
 		`docker`, `run`, `-it`, `--rm`,
-		`-v`, fmt.Sprintf(`%s:/go/src/%s`, currentDir, targetPath),
-		`-w`, fmt.Sprintf(`/go/src/%s`, targetPath),
+		`-v`, fmt.Sprintf(`%s:/go/%s`, currentDir, targetPath),
+		`-w`, fmt.Sprintf(`/go/%s`, targetPath),
 		`-e`, `GOPATH=/go`,
 		dockerImage,
 		`tinygo`)
+	if cmdMode {
+		cmd = exec.Command(
+			`docker`, `run`, `-it`, `--rm`,
+			`-v`, fmt.Sprintf(`%s:/go/%s`, currentDir, targetPath),
+			`-w`, fmt.Sprintf(`/go/%s`, targetPath),
+			`-e`, `GOPATH=/go`,
+			dockerImage,
+		)
+	}
 	cmd.Args = append(cmd.Args, args...)
-	//fmt.Println(cmd)
+	if verbose {
+		fmt.Println(cmd)
+	}
 
 	tty, err := tty.Open()
 	if err != nil {

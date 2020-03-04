@@ -29,10 +29,22 @@ func (c *cli) Run(args []string) error {
 	}
 
 	dockerImage := `tinygo/tinygo`
-	if len(os.Args) >= 3 {
-		if os.Args[1] == `--docker-image` {
+	verbose := false
+	cmdMode := false
+loop:
+	for len(os.Args) >= 3 {
+		switch os.Args[1] {
+		case `--docker-image`:
 			dockerImage = os.Args[2]
 			os.Args = append([]string{os.Args[0]}, os.Args[3:]...)
+		case `--verbose`:
+			verbose = true
+			os.Args = append([]string{os.Args[0]}, os.Args[2:]...)
+		case `--command`:
+			cmdMode = true
+			os.Args = append([]string{os.Args[0]}, os.Args[2:]...)
+		default:
+			break loop
 		}
 	}
 
@@ -60,7 +72,7 @@ func (c *cli) Run(args []string) error {
 		}
 
 		//args := []string{`build`, `-o`, `app.uf2`, `-target`, `pyportal`, `.`}
-		err = runTinyGo(dockerImage, currentDirForDocker, targetPath, os.Args[1:])
+		err = runTinyGo(dockerImage, currentDirForDocker, targetPath, os.Args[1:], verbose, cmdMode)
 		if err != nil {
 			return err
 		}
